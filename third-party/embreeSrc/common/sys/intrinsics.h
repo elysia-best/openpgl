@@ -11,8 +11,13 @@
 
 #if defined(__ARM_NEON)
 #include "../simd/arm/emulation.h"
-#else
+#elif defined(__i386__) || defined(__x86_64__)
 #include <immintrin.h>
+#else
+#ifndef SIMDE_ENABLE_NATIVE_ALIASES 
+#  define SIMDE_ENABLE_NATIVE_ALIASES
+#endif
+#include "../simde/x86/avx512.h"
 #if defined(__EMSCRIPTEN__)
 #include "../simd/wasm/emulation.h"
 #endif
@@ -211,7 +216,7 @@ namespace embree
 #if defined(__ARM_NEON)
     return __builtin_ctz(v);
 #else
-#if defined(__AVX2__)
+#if defined(__AVX2__) && !defined(__loongarch__)
     return _tzcnt_u32(v);
 #elif defined(__X86_ASM__)
     int r = 0; asm ("bsf %1,%0" : "=r"(r) : "r"(v)); return r;
@@ -234,7 +239,7 @@ namespace embree
 #if defined(__ARM_NEON)
     return __builtin_ctz(v);
 #else
-#if defined(__AVX2__)
+#if defined(__AVX2__) && !defined(__loongarch__)
     return _tzcnt_u32(v);
 #elif defined(__X86_ASM__)
     unsigned r = 0; asm ("bsf %1,%0" : "=r"(r) : "r"(v)); return r;
@@ -253,7 +258,7 @@ namespace embree
 #else
   
   __forceinline size_t bsf(size_t v) {
-#if defined(__AVX2__) && !defined(__aarch64__)
+#if defined(__AVX2__) && !defined(__aarch64__)  && !defined(__loongarch__)
 #if defined(__X86_64__)
     return _tzcnt_u64(v);
 #else
@@ -291,7 +296,7 @@ namespace embree
   }
   
   __forceinline int bsr(int v) {
-#if defined(__AVX2__) && !defined(__aarch64__)
+#if defined(__AVX2__) && !defined(__aarch64__)  && !defined(__loongarch__)
     return 31 - _lzcnt_u32(v);
 #elif defined(__X86_ASM__)
     int r = 0; asm ("bsr %1,%0" : "=r"(r) : "r"(v)); return r;
@@ -302,7 +307,7 @@ namespace embree
   
 #if defined(__64BIT__) || defined(__EMSCRIPTEN__)
   __forceinline unsigned bsr(unsigned v) {
-#if defined(__AVX2__) 
+#if defined(__AVX2__)  && !defined(__loongarch__)
     return 31 - _lzcnt_u32(v);
 #elif defined(__X86_ASM__)
     unsigned r = 0; asm ("bsr %1,%0" : "=r"(r) : "r"(v)); return r;
@@ -313,7 +318,7 @@ namespace embree
 #endif
   
   __forceinline size_t bsr(size_t v) {
-#if defined(__AVX2__) && !defined(__aarch64__)
+#if defined(__AVX2__) && !defined(__aarch64__) && !defined(__loongarch__)
 #if defined(__X86_64__)
     return 63 - _lzcnt_u64(v);
 #else
@@ -328,7 +333,7 @@ namespace embree
   
   __forceinline int lzcnt(const int x)
   {
-#if defined(__AVX2__) && !defined(__aarch64__)
+#if defined(__AVX2__) && !defined(__aarch64__) && !defined(__loongarch__)
     return _lzcnt_u32(x);
 #else
     if (unlikely(x == 0)) return 32;
@@ -337,7 +342,7 @@ namespace embree
   }
 
   __forceinline size_t blsr(size_t v) {
-#if defined(__AVX2__) && !defined(__aarch64__)
+#if defined(__AVX2__) && !defined(__aarch64__) && !defined(__loongarch__)
   #if defined(__INTEL_COMPILER)
     return _blsr_u64(v);
   #else
@@ -474,7 +479,7 @@ namespace embree
   
 #else
   
-#if defined(__SSE4_2__) || defined(__ARM_NEON)
+#if !defined(__loongarch__) && (defined(__SSE4_2__) || defined(__ARM_NEON))
   
   __forceinline int popcnt(int in) {
     return _mm_popcnt_u32(in);
@@ -531,7 +536,7 @@ namespace embree
   __forceinline void prefetchL2EX(const void* ptr) {
     prefetchEX(ptr);
   }
-#if defined(__AVX2__) && !defined(__aarch64__)
+#if defined(__AVX2__) && !defined(__aarch64__) 
    __forceinline unsigned int pext(unsigned int a, unsigned int b) { return _pext_u32(a, b); }
    __forceinline unsigned int pdep(unsigned int a, unsigned int b) { return _pdep_u32(a, b); }
 #if defined(__X86_64__)

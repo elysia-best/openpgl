@@ -42,7 +42,11 @@ namespace openpgl
       return nullptr;
 
     assert((align & (align-1)) == 0);
+#ifndef __loongarch__
     void* ptr = _mm_malloc(size,align);
+#else
+    void* ptr = aligned_alloc (align, size);
+#endif
 
     if (size != 0 && ptr == nullptr)
       throw std::bad_alloc();
@@ -53,7 +57,11 @@ namespace openpgl
   inline void alignedFree(void* ptr)
   {
     if (ptr)
-      _mm_free(ptr);
+#ifndef __loongarch__
+       _mm_free(ptr);
+#else
+        free(ptr);
+#endif
   }
 }
 

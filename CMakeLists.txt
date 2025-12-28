@@ -54,7 +54,9 @@ try_compile(COMPILER_SUPPORTS_ARM_NEON "${CMAKE_BINARY_DIR}" "${PROJECT_SOURCE_D
 if(COMPILER_SUPPORTS_ARM_NEON)
   option(OPENPGL_ISA_NEON "Build with support for NEON." ON)
   option(OPENPGL_ISA_NEON2X "Build with support for NEON double pumped." ON)
-else()
+elseif("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "loongarch64")
+  option(OPENPGL_ISA_LSX "Build with LSX support for LoongArch." ON)
+elseif("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "x86_64" OR "${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "x64")
   option(OPENPGL_ISA_SSE4 "Build with support for SSE4." ON)
   option(OPENPGL_ISA_AVX2 "Build with support for AVX2." ON)
   option(OPENPGL_ISA_AVX512 "Build with support for AVX512." OFF)
@@ -62,6 +64,7 @@ endif()
 
 if(NOT (OPENPGL_ISA_NEON OR
         OPENPGL_ISA_NEON2X OR
+        OPENPGL_ISA_LSX OR
         OPENPGL_ISA_SSE4 OR
         OPENPGL_ISA_AVX2 OR
         OPENPGL_ISA_AVX512))

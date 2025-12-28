@@ -49,6 +49,8 @@ struct Device
 OPENPGL_INLINE Device::Device(PGL_DEVICE_TYPE deviceType, size_t numThreads)
 {
     m_deviceHandle = pglNewDevice(deviceType, numThreads);
+    if (m_deviceHandle == nullptr)
+        throw std::runtime_error("unable to create OpenPGL device");
 }
 
 OPENPGL_INLINE Device::~Device()

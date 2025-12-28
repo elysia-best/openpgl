@@ -3,7 +3,7 @@
 
 
 set(DEVICE_SRC)
-if(OPENPGL_ISA_SSE4 OR OPENPGL_ISA_NEON)
+if(OPENPGL_ISA_SSE4 OR OPENPGL_ISA_NEON OR OPENPGL_ISA_LSX)
   set(DEVICE_SRC ${DEVICE_SRC} api/deviceCPU4.cpp)
 endif()
 if(OPENPGL_ISA_AVX2 OR OPENPGL_ISA_NEON2X)
@@ -45,7 +45,7 @@ endif()
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE OPENPGL_VERSION_MAJOR=${PROJECT_VERSION_MAJOR} OPENPGL_VERSION_MINOR=${PROJECT_VERSION_MINOR} OPENPGL_VERSION_PATCH=${PROJECT_VERSION_PATCH})
 target_compile_definitions(${PROJECT_NAME} PRIVATE OPENPGL_VERSION_STRING="${PROJECT_VERSION}")
-if(OPENPGL_ISA_SSE4 OR OPENPGL_ISA_NEON)
+if(OPENPGL_ISA_SSE4 OR OPENPGL_ISA_NEON OR OPENPGL_ISA_LSX)
   target_compile_definitions(${PROJECT_NAME} PRIVATE OPENPGL_DEVICE_TYPE_CPU_4)
 endif()
 if(OPENPGL_ISA_AVX2 OR OPENPGL_ISA_NEON2X)
@@ -106,6 +106,10 @@ else()
   list(APPEND OPENPGL_COMMON_OPTIONS -fno-strict-aliasing)                  # disables strict aliasing rules
   list(APPEND OPENPGL_COMMON_OPTIONS -fno-tree-vectorize)                   # disable auto vectorizer
 
+  if ("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "loongarch64")
+    list(APPEND OPENPGL_COMMON_OPTIONS -msimd=lsx)       
+  endif()
+
   if (OPENPGL_ARM)
     list(APPEND OPENPGL_COMMON_OPTIONS -fsigned-char)                       # treat 'char' as 'signed char'
     list(APPEND OPENPGL_COMMON_OPTIONS -flax-vector-conversions)            # allow lax vector type conversions
@@ -136,6 +140,9 @@ else()
   if(OPENPGL_ISA_NEON2X)
     set_source_files_properties(api/deviceCPU8.cpp PROPERTIES COMPILE_FLAGS "-D__AVX2__ -D__AVX__ -D__SSE4_2__  -D__SSE4_1__  -D__BMI__ -D__BMI2__ -D__LZCNT__")
   endif()
+  if(OPENPGL_ISA_LSX)
+    set_source_files_properties(api/deviceCPU4.cpp PROPERTIES COMPILE_FLAGS "-msimd=lsx")
+  endif() 
 endif()
 
 target_compile_options(${PROJECT_NAME} PRIVATE ${OPENPGL_COMMON_OPTIONS})

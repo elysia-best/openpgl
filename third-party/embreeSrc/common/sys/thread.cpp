@@ -8,8 +8,19 @@
 #include <iostream>
 #if defined(__ARM_NEON)
 #include "../simd/arm/emulation.h"
-#else
+#elif defined(__i386__) || defined(__x86_64__)
 #include <xmmintrin.h>
+#else
+#ifndef SIMDE_ENABLE_NATIVE_ALIASES 
+#  define SIMDE_ENABLE_NATIVE_ALIASES
+#endif
+#include "../simde/x86/mmx.h"
+#include "../simde/x86/sse.h"
+#include "../simde/x86/sse2.h"
+#include "../simde/x86/sse3.h"
+#include "../simde/x86/ssse3.h"
+#include "../simde/x86/sse4.1.h"
+#include "../simde/x86/sse4.2.h"
 #if defined(__EMSCRIPTEN__)
 #include "../simd/wasm/emulation.h"
 #endif
