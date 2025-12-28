@@ -60,6 +60,10 @@
 #define isa sse2
 #define ISA NEON
 #define ISA_STR "NEON"
+#elif defined(__loongarch_sx)
+#  define isa lsx
+#  define ISA LSX
+#  define ISA_STR "LSX"
 #else
 #error Unknown ISA
 #endif
@@ -89,6 +93,7 @@ namespace embree
     CORE2,
     CORE1,
     ARM,
+    LoongArch,
     UNKNOWN,
   };
   
@@ -140,6 +145,7 @@ namespace embree
   static const int CPU_FEATURE_ZMM_ENABLED = 1 << 27;
   static const int CPU_FEATURE_NEON = 1 << 28;
   static const int CPU_FEATURE_NEON_2X = 1 << 29;
+  static const int CPU_FEATURE_LSX = 1 << 30;
 
   /*! get CPU features */
   int getCPUFeatures();
@@ -163,6 +169,7 @@ namespace embree
   static const int AVX512 = AVX2 | CPU_FEATURE_AVX512F | CPU_FEATURE_AVX512DQ | CPU_FEATURE_AVX512CD | CPU_FEATURE_AVX512BW | CPU_FEATURE_AVX512VL | CPU_FEATURE_ZMM_ENABLED;
   static const int NEON = CPU_FEATURE_NEON | CPU_FEATURE_SSE | CPU_FEATURE_SSE2;
   static const int NEON_2X = CPU_FEATURE_NEON_2X | AVX2;
+  static const int LSX = CPU_FEATURE_LSX | CPU_FEATURE_SSE | CPU_FEATURE_SSE2 | SSE41 | SSE42 | AVX | AVX2;
 
   /*! converts ISA bitvector into a string */
   std::string stringOfISA(int features);

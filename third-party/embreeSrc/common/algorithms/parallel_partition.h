@@ -82,7 +82,7 @@ namespace embree
                                           const size_t BLOCK_SIZE) 
 
       : array(array), N(N), is_left(is_left), reduction_t(reduction_t), reduction_v(reduction_v), identity(identity),
-      numTasks(min((N+BLOCK_SIZE-1)/BLOCK_SIZE,min(TaskScheduler::threadCount(),MAX_TASKS))) {}
+      numTasks(min((N+BLOCK_SIZE-1)/BLOCK_SIZE,min((TaskScheduler::threadCount()),MAX_TASKS))) {}
 
     __forceinline const range<ssize_t>* findStartRange(size_t& index, const range<ssize_t>* const r, const size_t numRanges)
     {
