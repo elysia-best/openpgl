@@ -86,7 +86,7 @@ Configure the Open PGL build using:
     - `OPENPGL_ISA_NEON` and `OPENPGL_ISA_NEON2X` if Open PGL is compiled with NEON or double
        pumped NEON support (default `OFF`).
 
-    - `OPENPGL_ISA_LSX` if Open PGL is compiled for LoongArch64 with the Embree SIMDe-based LSX
+    - `OPENPGL_ISA_LSX` if OpenPGL is compiled for LoongArch64 with the Embree SIMDe-based LSX
        port. This requires compiler support for `-msimd=lsx` as described by the LoongArch
        toolchain conventions.
 
