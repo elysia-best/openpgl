@@ -90,6 +90,8 @@ extern "C" OPENPGL_DLLEXPORT PGLDevice pglNewDevice(PGL_DEVICE_TYPE deviceType, 
         deviceType = PGL_DEVICE_TYPE_CPU_8;
 #elif defined(OPENPGL_DEVICE_TYPE_CPU_4)
         deviceType = PGL_DEVICE_TYPE_CPU_4;
+#else
+        throw std::runtime_error("unable to find CPU device backend");
 #endif
     }
 
