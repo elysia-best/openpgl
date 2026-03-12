@@ -82,6 +82,17 @@ typedef ISurfaceVolumeField IGuidingField;
 
 extern "C" OPENPGL_DLLEXPORT PGLDevice pglNewDevice(PGL_DEVICE_TYPE deviceType, size_t numThreads)OPENPGL_CATCH_BEGIN
 {
+    if (deviceType == PGL_DEVICE_TYPE_NONE)
+    {
+#ifdef OPENPGL_DEVICE_TYPE_CPU_16
+        deviceType = PGL_DEVICE_TYPE_CPU_16;
+#elif defined(OPENPGL_DEVICE_TYPE_CPU_8)
+        deviceType = PGL_DEVICE_TYPE_CPU_8;
+#elif defined(OPENPGL_DEVICE_TYPE_CPU_4)
+        deviceType = PGL_DEVICE_TYPE_CPU_4;
+#endif
+    }
+
 #ifdef OPENPGL_DEVICE_TYPE_CPU_4
     if (deviceType == PGL_DEVICE_TYPE_CPU_4)
         return (PGLDevice) newDeviceCPU4(numThreads);
@@ -844,4 +855,3 @@ extern "C" OPENPGL_DLLEXPORT void pglReleaseString(PGLString str)
         str.m_size = 0;
     }
 }
-
