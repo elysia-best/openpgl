@@ -351,6 +351,14 @@ namespace embree
 
     return cpu_features;
 
+#elif defined(__loongarch_lp64)
+
+    int cpu_features = CPU_FEATURE_SSE | CPU_FEATURE_SSE2 | CPU_FEATURE_XMM_ENABLED;
+#if defined(__loongarch_sx)
+    cpu_features |= CPU_FEATURE_LSX;
+#endif
+    return cpu_features;
+
 #elif defined(__ARM_NEON) || defined(__EMSCRIPTEN__)
 
     int cpu_features = CPU_FEATURE_NEON|CPU_FEATURE_SSE|CPU_FEATURE_SSE2;
@@ -366,13 +374,6 @@ namespace embree
     cpu_features |= CPU_FEATURE_BMI1;
     cpu_features |= CPU_FEATURE_BMI2;
     cpu_features |= CPU_FEATURE_NEON_2X;
-    return cpu_features;
-#elif defined(__loongarch__)
-    int cpu_features = CPU_FEATURE_LSX|CPU_FEATURE_SSE|CPU_FEATURE_SSE2;
-    cpu_features |= CPU_FEATURE_SSE3|CPU_FEATURE_SSSE3|CPU_FEATURE_SSE42;
-    cpu_features |= CPU_FEATURE_AVX;
-    cpu_features |= CPU_FEATURE_AVX2;
-    cpu_features |= CPU_FEATURE_FMA3;
     return cpu_features;
 #else
     /* Unknown CPU. */

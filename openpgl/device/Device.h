@@ -1,16 +1,5 @@
 #pragma once
 
-#ifdef __loongarch_lp64
-#ifndef SIMDE_ENABLE_NATIVE_ALIASES 
-#  define SIMDE_ENABLE_NATIVE_ALIASES
-#endif
-#include "embreeSrc/common/simde/x86/mmx.h"
-#include "embreeSrc/common/simde/x86/sse3.h"
-#include "embreeSrc/common/simde/x86/ssse3.h"
-#include "embreeSrc/common/simde/x86/sse4.2.h"
-#include "embreeSrc/common/simde/x86/avx512.h"
-#endif
-
 #include "../include/openpgl/config.h"
 
 #include "../openpgl_common.h"

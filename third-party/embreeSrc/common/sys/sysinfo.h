@@ -169,7 +169,7 @@ namespace embree
   static const int AVX512 = AVX2 | CPU_FEATURE_AVX512F | CPU_FEATURE_AVX512DQ | CPU_FEATURE_AVX512CD | CPU_FEATURE_AVX512BW | CPU_FEATURE_AVX512VL | CPU_FEATURE_ZMM_ENABLED;
   static const int NEON = CPU_FEATURE_NEON | CPU_FEATURE_SSE | CPU_FEATURE_SSE2;
   static const int NEON_2X = CPU_FEATURE_NEON_2X | AVX2;
-  static const int LSX = CPU_FEATURE_LSX | CPU_FEATURE_SSE | CPU_FEATURE_SSE2 | SSE41 | SSE42 | AVX | AVX2;
+  static const int LSX = CPU_FEATURE_LSX | CPU_FEATURE_SSE | CPU_FEATURE_SSE2 | CPU_FEATURE_XMM_ENABLED;
 
   /*! converts ISA bitvector into a string */
   std::string stringOfISA(int features);
